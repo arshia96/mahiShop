@@ -1,0 +1,109 @@
+{% extends 'blog/parents/base.html' %}
+
+{% block title %}checkout{% endblock %}
+
+{% block head %}{% endblock %}
+
+
+{% block content %}
+    <div class="container col-7 my-5">
+
+        <div class="row" style="text-align: justify; direction: rtl;">
+            <div class="col-md-4 order-md-2 mb-4">
+                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-muted">سبدخرید شما</span>
+                    <span class="badge badge-secondary badge-pill">3</span>
+                </h4>
+                <ul class="list-group mb-3">
+                    {% for item in items %}
+                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                            <div>
+                                <h6 class="my-0">{{ item.product.title }} x {{ item.quantity }}</h6>
+                            </div>
+                            <span class="text-muted">   {{ item.get_total_price|floatformat:0 }} تومان</span>
+                        </li>
+                    {% endfor %}
+                    <li class="list-group-item d-flex justify-content-between bg-light">
+                        <div class="text-muted">
+                            <h6 class="my-0">هزینه ارسال</h6>
+                        </div>
+                        <span class="text-muted">{{ order.delivery.price|floatformat:0 }} تومان</span>
+                    </li>
+                    {% if order.coupons %}
+                    <li class="list-group-item d-flex justify-content-between bg-light">
+                        <div class="text-success">
+                            <h6 class="my-0">کدتخفیف</h6>
+                            <small>{{ order.coupons.code }}</small>
+                        </div>
+                        <span class="text-success">- {{ order.coupons.discount|floatformat:0 }} تومان</span>
+                    </li>
+                {% endif %}
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>جمع کل (تومان)</span>
+                        <strong>{{ order.get_last_total_price|floatformat:0 }} تومان</strong>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-8 order-md-1">
+                <h4 class="mb-3">مشخصات تحویل گیرنده</h4>
+                <form class="needs-validation" method="POST" novalidate>
+
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="firstName">نام</label>
+                            <input type="text" class="form-control" id="firstName" placeholder=""
+                                    {% if customer.first_name %} value="{{ customer.first_name }}"
+                                   readonly="readonly" {% endif %} required>
+                            <div class="invalid-feedback">
+                                نام شما باید معتبر باشد
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="lastName">نام خانوادگی</label>
+                            <input type="text" class="form-control" id="lastName" placeholder=""
+                                    {% if customer.last_name %} value="{{ customer.last_name }}"
+                                   readonly="readonly" {% endif %} required>
+                            <div class="invalid-feedback">
+                                نام خانوادگی باید معتبر باشد
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="phone">شماره تماس</label>
+                        <input type="number" class="form-control" id="phone" placeholder="09"
+                               {% if customer.phone %}value="{{ customer.phone }}" readonly="readonly" {% endif %}>
+                        <div class="invalid-feedback">
+                            برای دریافت اطلاعات پستی شماره ی خود را وارد کنید
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email">ایمیل <span class="text-muted">(اختیاری)</span></label>
+                        <input type="email" class="form-control" id="email" placeholder="you@example.com"
+                                {% if customer.email %} value="{{ customer.email }}" readonly="readonly" {% endif %}>
+                        <div class="invalid-feedback">
+                            برای دریافت اطلاعات پستی ایمیل خود را وارد کنید
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="address">آدرس</label>
+                        <input type="text" class="form-control" id="address" placeholder="تهران - خیابان" required
+                                {% if customer.address %} value="{{ customer.address }}"
+                               readonly="readonly" {% endif %}>
+                        <div class="invalid-feedback">
+                            آدرس خود را وارد کنید
+                        </div>
+                    </div>
+                    {% csrf_token %}
+                </form>
+                <a href="{% url 'blog:payment' %}">
+                    <button class="btn btn-primary btn-lg btn-block" type="button">پرداخت</button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

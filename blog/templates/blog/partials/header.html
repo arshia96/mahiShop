@@ -1,0 +1,20 @@
+<header class="bg-dark py-5" style="background-image: url('../../../../media/welcome.jpg');
+                                    background-repeat: no-repeat; background-size: cover;">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h2 class="display-4 fw-bolder">به فروشگاه مهی خوش اومدید</h2>
+
+            <div class="input-group d-block mx-auto">
+                <div class="form-outline">
+                    <div class="form-outline">
+                        <form method="get" action="{% url 'blog:search' %}">
+                            <input id="search-input" type="search" id="form1" class="form-control mx-auto mt-4"
+                                   placeholder="جستجو کنید..." style="width: 60%; direction: rtl; text-align: center;" name="query" value="{{ request.GET.query }}"/>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</header>

@@ -1,0 +1,96 @@
+{% extends 'blog/parents/base.html' %}
+{% load blog_tags %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    {% include 'blog/partials/header.html' %}
+    <style>
+        .addToCart{
+            font-size: 1rem;
+            font-weight: bold;
+            width: 100%;
+            border: none;
+            border-radius: 0;
+            background-color: rgba(0, 100, 0, 0.659);
+            color: #F8F9FA;
+        }
+        .addToCart:hover{
+            background-color: rgba(0, 128, 0, 0.719);
+            color: ghostwhite;
+        }
+        .moreInfo{
+            font-size: 0.8rem;
+            font-weight: bold;
+            width: 100%;
+            border: none;
+            border-radius: 0;
+            background-color: rgba(28, 52, 118, 0.559);
+            color: #F8F9FA;
+        }
+        .moreInfo:hover{
+            background-color: rgba(28, 52, 118, 0.658);
+            color: ghostwhite;
+        }
+    </style>
+    
+    <section class="py-5" style="text-align: justify; direction: rtl;">
+        <div class="container px-4 px-lg-5 mt-5">
+            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+
+                {% for product in products %}
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            {% if product.offPrice %}
+
+                                <!-- Sale badge-->
+                                <div class="badge bg-info text-white position-absolute"
+                                     style="top: 0.5rem; right: 0.5rem">
+                                    تخفیف ویژه
+                                </div>
+                            {% endif %}
+                            <!-- Product image-->
+                            <a href="{{ product.get_absolute_url }}"><img class="card-img-top"
+                                                                          src="{{ product.image.url }}"
+                                                                          alt="..."/></a>
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">{{ product.title }}</h5>
+                                    <!-- Product price-->
+                                    {% if product.offPrice %}
+
+                                        <span class="text-muted text-decoration-line-through" style="font-size: 0.8rem;">{{ product.price|floatformat:0 }} تومان</span>
+                                        {{ product.offPrice|floatformat:0 }} تومان
+                                    {% else %}
+                                        {{ product.price|floatformat:0 }} تومان
+
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="pt-0 border-top-0 bg-transparent" style="width: 100%;">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto moreInfo"
+                                                            href="{{ product.get_absolute_url }}">اطلاعات بیشتر</a>
+                                </div>
+
+                                <div class="text-center inline-block"><a
+                                        class="btn btn-outline-info mt-auto update-item addToCart"
+                                        data-product="{{ product.id }}" data-action="add" {% if not request.user.authentication %}href="{% url 'blog:login' %}" {% endif %}>افزودن به سبد خرید</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+
+            </div>
+        </div>
+    </section>
+
+{% include 'blog/partials/pagination.html' with page=products %}
+{% show_top_products %}
+
+{% endblock %}
